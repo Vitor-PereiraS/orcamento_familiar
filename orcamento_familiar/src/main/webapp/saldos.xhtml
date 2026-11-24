@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Saldos</title>
+	<style>
+	
+				* {
+		  margin: 0;
+		  padding: 0;
+		  box-sizing: border-box;
+		}
+			
+			html, body {
+		  margin: 0;
+		  padding: 0;
+		  width: 100%;
+		  height: 100%;
+		}
+			
+			/* Faz o fundo do menubar encostar nas bordas da tela */
+		.menubar-full {
+		  width: 100%;
+		  border-radius: 0 !important; /* Remove cantos arredondados padrão do tema */
+		  border-left: none !important;
+		  border-right: none !important;
+		  padding: 15px 0 !important; /* Espaçamento vertical (substitui o padding: 20px) */
+		}
+		
+		/* Limita e centraliza apenas os itens (links e botão Sair) dentro do menu */
+		.menubar-full > .ui-menu-list {
+		  max-width: 1300px; /* Use a mesma largura do seu .container */
+		  margin: 0 auto !important;
+		  padding: 0 20px;   /* Mesmo respiro lateral do seu .container */
+		  box-sizing: border-box;
+		  display: flex;
+		  align-items: center;
+		}
+		
+		/* Empurra o botão "Sair" (facet options) para a extrema direita do container */
+		.menubar-full .ui-menubar-options {
+		  margin-left: auto;
+		}
+			
+		.container {
+		  width: 100%;
+		  max-width: 1300px; /* Largura máxima em telas grandes */
+		  margin: 0 auto;    /* Centraliza o container na horizontal */
+		  padding: 0 20px;   /* Dá um respiro nas bordas em telas menores (celular) */
+		  box-sizing: border-box; /* Garante que o padding não estoure a largura de 100% */
+		}
+			
+	
+        /* Estilo do fundo cinza da barra */
+        .barra-limite.ui-progressbar {
+            height: 14px;
+            background: #e2e2df !important;
+            border: none !important;
+            border-radius: 999px !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            overflow: hidden;
+        }
+
+        /* Estilo do preenchimento azul arredondado */
+        .barra-limite .ui-progressbar-value {
+            background: #2f7ed8 !important;
+            border: none !important;
+            border-radius: 999px !important;
+            margin: 0 !important;
+            height: 100% !important;
+        }
+
+        /* Esconde o rótulo interno padrão do PrimeFaces */
+        .barra-limite .ui-progressbar-label {
+            display: none !important;
+        }
+
+        /* Texto logo abaixo da barra */
+        .texto-limite {
+            margin-top: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #555555;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+	<header>
+		<h:form id="menuForm" style="margin: 0px;" >
+			<p:menubar  styleClass="menubar-full" >
+				<p:menuitem value="Lançamentos" outcome="/lancamentos"/>
+				<p:menuitem value="Saldos" outcome="/saldos" style="font-weight: bold;" />
+				<p:menuitem value="Parametrização" outcome="/parametrizacao"/>
+				<f:facet name="options">
+					<p:commandButton value="Sair" icon="ui-icon-extlink" action="index?faces-redirect=true"/>
+				</f:facet>
+			</p:menubar>
+		</h:form>
+	</header>
+
+
+	<p:messages id="mensagensGlobais" autoUpdate="true" closable="true"
+		showDetail="true" />
+	<h:form id="formPrincipal" styleClass="container"
+		style=" width: 100%; border: 2px solid #cccccc; border-radius: 5px; padding: 10px; box-sizing: border-box;">
+
+
+		<!-- PAINEL DE PESQUISA CUSTOMIZADO NO INÍCIO -->
+		<h:panelGrid title="Filtros">
+			<p:outputPanel>
+				<p:outputLabel value="Mês de referência " />
+				<p:calendar id="data" placeholder="data" pattern="dd/MM/yyyy"
+					mask="true" converter="localDateConverter">
+				</p:calendar>
+			</p:outputPanel>
+		</h:panelGrid>
+
+		<br />
+
+		<!-- PAINEL DE Saldo geral -->
+		<p:outputPanel title="Saldo"
+			style=" width: 100%; border: 2px solid #cccccc; border-radius: 5px; padding: 10px; display: grid; gap:20px;  grid-template-columns: repeat(2, 1fr); box-sizing: border-box; margin-bottom: 10px; ">
+
+			<p:outputPanel style="display: flex; flex-direction: column;">
+				<p:outputLabel value="Saldo geral (Comum)" />
+
+				<h:outputText value="#{3887.60}">
+					<f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR" />
+				</h:outputText>
+
+
+			</p:outputPanel>
+
+			<p:outputPanel style="display: flex; flex-direction: column;">
+				<div>
+					<p:outputLabel value="Limite mínimo comum:" />
+
+					<h:outputText value="#{0.0}">
+						<f:convertNumber type="currency" currencySymbol="R$"
+							locale="pt_BR" />
+					</h:outputText>
+				</div>
+				<p:outputLabel value="receitas - todas as despesas" />
+			</p:outputPanel>
+		</p:outputPanel>
+
+		<!-- PAINEL DE Saldo Usuarios -->
+		<p:outputPanel title="Usuario"
+			style=" width: 100%;  padding: 10px; display: grid; gap:20px;  grid-template-columns: repeat(2, 1fr); box-sizing: border-box; ">
+
+			<p:outputPanel
+				style="display: flex; flex-direction: column; border: 2px solid #cccccc; border-radius: 5px; padding: 10px; gap:5px;">
+
+				<p:outputLabel value="Usuário A" />
+
+				<div
+					style="display: flex; justify-content: space-between; gap: 20px;">
+					<p:outputLabel value="Limite vigente no mês" />
+					<h:outputText value="#{1000.00}">
+						<f:convertNumber type="currency" currencySymbol="R$"
+							locale="pt_BR" />
+					</h:outputText>
+				</div>
+
+				<div
+					style="display: flex; justify-content: space-between; gap: 20px;">
+					<p:outputLabel value="Consumido no mês" />
+					<h:outputText value="#{209.90}">
+						<f:convertNumber type="currency" currencySymbol="R$"
+							locale="pt_BR" />
+					</h:outputText>
+				</div>
+
+				<div
+					style="display: flex; justify-content: space-between; gap: 20px;">
+					<p:outputLabel value="Disponível" />
+					<h:outputText value="#{790.10}">
+						<f:convertNumber type="currency" currencySymbol="R$"
+							locale="pt_BR" />
+					</h:outputText>
+
+
+				</div>
+				<p:progressBar value="#{limiteBean.percentualUsado}"
+					styleClass="barra-limite" />
+				<div class="texto-limite">#{limiteBean.percentualUsado}% do
+					limite consumido</div>
+			</p:outputPanel>
+
+			<p:outputPanel
+				style="display: flex; flex-direction: column; border: 2px solid #cccccc; border-radius: 5px; padding: 10px; gap:5px;">
+
+				<p:outputLabel value="Usuário B" />
+
+				<div
+					style="display: flex; justify-content: space-between; gap: 20px;">
+					<p:outputLabel value="Limite vigente no mês" />
+					<h:outputText value="#{1000.00}">
+						<f:convertNumber type="currency" currencySymbol="R$"
+							locale="pt_BR" />
+					</h:outputText>
+				</div>
+
+				<div
+					style="display: flex; justify-content: space-between; gap: 20px;">
+					<p:outputLabel value="Consumido no mês" />
+					<h:outputText value="#{120.00}">
+						<f:convertNumber type="currency" currencySymbol="R$"
+							locale="pt_BR" />
+					</h:outputText>
+				</div>
+
+				<div
+					style="display: flex; justify-content: space-between; gap: 20px;">
+					<p:outputLabel value="Disponível" />
+					<h:outputText value="#{880.00}">
+						<f:convertNumber type="currency" currencySymbol="R$"
+							locale="pt_BR" />
+					</h:outputText>
+
+
+				</div>
+				<p:progressBar value="#{limiteBean.percentualUsadoB}"
+					styleClass="barra-limite" />
+				<div class="texto-limite">#{limiteBean.percentualUsadoB}% do
+					limite consumido</div>
+			</p:outputPanel>
+		</p:outputPanel>
+	</h:form>
+</h:body>
+
+</html>
